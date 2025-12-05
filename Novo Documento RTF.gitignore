@@ -1,0 +1,63 @@
+# Arquivos Python compilados
+
+**pycache**/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Arquivos de PyInstaller
+
+*.manifest
+*.spec
+
+# Arquivos de configuração de IDEs
+
+.vscode/
+.idea/
+
+# Arquivos temporários do Windows
+
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+
+# Arquivos de backup de editores
+
+*~
+*.bak
+*.tmp
+
+# Arquivos de Qt Designer
+
+*.ui~
+*.qrc~
+
+# Banco de dados local ou arquivos binários do projeto
+
+*.db
+*.sqlite3
+*.png
+*.pdf
+*.mwb
+
+# Arquivos de cache do Python
+
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Ignorar arquivos gerados automaticamente do Git
+
+.gitignore
+*.log
+*.out
+*.class
+*.jar
+*.exe
+*.o
+*.so
+*.dll
+*.pyc
+**pycache**/
