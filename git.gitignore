@@ -1,0 +1,55 @@
+# ---------- AMBIENTE VIRTUAL ----------
+
+.venv/
+env/
+venv/
+
+# ---------- COMPILAÇÃO PYTHON ----------
+
+**pycache**/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ---------- INTERFACES PYQT ----------
+
+# Arquivos temporários gerados pelo designer
+
+*.qrc
+*.pyc
+
+# ---------- MYSQL WORKBENCH ----------
+
+# (Descomente se não quiser subir .mwb)
+
+# *.mwb
+
+# ---------- BANCO DE DADOS LOCAL ----------
+
+*.db
+*.sqlite3
+
+# ---------- IDEs E EDITORES ----------
+
+# VSCode
+
+.vscode/
+
+# PyCharm
+
+.idea/
+
+# ---------- SISTEMA OPERACIONAL ----------
+
+# Windows
+
+Thumbs.db
+desktop.ini
+
+# Mac
+
+.DS_Store
+
+# ---------- OUTROS ----------
+
+*.log
