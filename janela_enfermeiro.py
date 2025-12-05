@@ -102,20 +102,6 @@ class Ui_TelaEnfermeiro(object):
         view.setPalette(pal)
         # --- fim combo ---
 
-        # atendimento
-        self.lineEdit_atendim = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_atendim.setGeometry(QtCore.QRect(210, 170, 121, 20))
-        self.lineEdit_atendim.setStyleSheet("color:#333;\nbackground: transparent; \nborder-radius: 4px; \nborder: 1px solid #AAAAAA;  \npadding-left: 4px;")
-        self.lineEdit_atendim.setText("")
-        self.lineEdit_atendim.setObjectName("lineEdit_atendim")
-
-        # setor
-        self.lineEdit_setor = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_setor.setGeometry(QtCore.QRect(350, 170, 181, 20))
-        self.lineEdit_setor.setStyleSheet("color:#333;\nbackground: transparent; \nborder-radius: 4px; \nborder: 1px solid #AAAAAA;  \npadding-left: 4px;")
-        self.lineEdit_setor.setText("")
-        self.lineEdit_setor.setPlaceholderText("Digite o setor")
-        self.lineEdit_setor.setObjectName("lineEdit_setor")
 
         # buttons
         self.pushButton_cadastrar = QtWidgets.QPushButton(self.centralwidget)
@@ -155,33 +141,19 @@ class Ui_TelaEnfermeiro(object):
         self.label_coren.setFont(font)
         self.label_coren.setObjectName("label_coren")
 
-        self.label_atendim = QtWidgets.QLabel(self.centralwidget)
-        self.label_atendim.setGeometry(QtCore.QRect(210, 150, 81, 16))
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_atendim.setFont(font)
-        self.label_atendim.setObjectName("label_atendim")
 
-        self.label_setor = QtWidgets.QLabel(self.centralwidget)
-        self.label_setor.setGeometry(QtCore.QRect(350, 150, 47, 13))
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_setor.setFont(font)
-        self.label_setor.setObjectName("label_setor")
 
         # id
         self.lineEdit_id = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_id.setEnabled(False)
-        self.lineEdit_id.setGeometry(QtCore.QRect(170, 230, 71, 20))
+        self.lineEdit_id.setGeometry(QtCore.QRect(40, 230, 71, 20))
         self.lineEdit_id.setStyleSheet("color:#333;\nbackground: transparent; \nborder-radius: 4px; \nborder: 1px solid #AAAAAA;  \npadding-left: 4px;")
         self.lineEdit_id.setText("")
         self.lineEdit_id.setPlaceholderText("Digite o ID")
         self.lineEdit_id.setObjectName("lineEdit_id")
 
         self.label_id_enfer = QtWidgets.QLabel(self.centralwidget)
-        self.label_id_enfer.setGeometry(QtCore.QRect(170, 210, 71, 16))
+        self.label_id_enfer.setGeometry(QtCore.QRect(40, 210, 71, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
@@ -203,7 +175,7 @@ QHeaderView::section {
 }
 """)
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(7)
+        self.tableWidget.setColumnCount(4)
         self.tableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
@@ -214,30 +186,13 @@ QHeaderView::section {
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(4, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(5, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(6, item)
+        
         self.tableWidget.horizontalHeader().setDefaultSectionSize(66)
         self.tableWidget.setColumnWidth(0, 10)
-
-        # turno
-        self.lineEdit_turno = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_turno.setGeometry(QtCore.QRect(40, 230, 111, 20))
-        self.lineEdit_turno.setStyleSheet("color:#333;\nbackground: transparent; \nborder-radius: 4px; \nborder: 1px solid #AAAAAA;  \npadding-left: 4px;")
-        self.lineEdit_turno.setText("")
-        self.lineEdit_turno.setPlaceholderText("Digite o turno")
-        self.lineEdit_turno.setObjectName("lineEdit_turno")
-
-        self.label_turno = QtWidgets.QLabel(self.centralwidget)
-        self.label_turno.setGeometry(QtCore.QRect(40, 210, 47, 13))
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_turno.setFont(font)
-        self.label_turno.setObjectName("label_turno")
-
+        self.tableWidget.setColumnWidth(1, 150)
+        self.tableWidget.setColumnWidth(2, 120)
+        self.tableWidget.setColumnWidth(3, 80)
+        
         # set central widget and statusbar
         TelaEnfermeiro.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(TelaEnfermeiro)
@@ -257,10 +212,8 @@ QHeaderView::section {
         self.pushButton_editar.setText(_translate("TelaEnfermeiro", "Editar"))
         self.pushButton_excluir.setText(_translate("TelaEnfermeiro", "Excluir"))
         self.label_nome.setText(_translate("TelaEnfermeiro", "Nome:"))
-        self.label_coren.setText(_translate("TelaEnfermeiro", "Coren:"))
+        self.label_coren.setText(_translate("TelaEnfermeiro", "COREN:"))
         self.label_status.setText(_translate("TelaEnfermeiro", "Status"))
-        self.label_atendim.setText(_translate("TelaEnfermeiro", "Atendimento:"))
-        self.label_setor.setText(_translate("TelaEnfermeiro", "Setor:"))
         self.label_id_enfer.setText(_translate("TelaEnfermeiro", "ID:"))
         self.tableWidget.setSortingEnabled(False)
         item = self.tableWidget.horizontalHeaderItem(0)
@@ -272,13 +225,7 @@ QHeaderView::section {
         item = self.tableWidget.horizontalHeaderItem(3)
         item.setText(_translate("TelaEnfermeiro", "Status"))
         item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText(_translate("TelaEnfermeiro", "Atendim."))
-        item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("TelaEnfermeiro", "Setor"))
-        item = self.tableWidget.horizontalHeaderItem(6)
-        item.setText(_translate("TelaEnfermeiro", "Turno"))
-        self.label_turno.setText(_translate("TelaEnfermeiro", "Turno:"))
-        
+       
 
 if __name__ == "__main__":
     import sys
