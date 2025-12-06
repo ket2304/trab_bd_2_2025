@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS tb_hospital(
 
 
 
-CREATE TABLE IF NOT EXISTS tb_pacientes(
+CREATE TABLE IF NOT EXISTS tb_paciente(
 	id_paciente INT AUTO_INCREMENT PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL UNIQUE,
     nome_paciente VARCHAR(255) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS tb_historico_paciente (
     valor_novo VARCHAR(255),
     data_modificacao DATETIME NOT NULL DEFAULT NOW(),
 
-    FOREIGN KEY (id_paciente) REFERENCES tb_pacientes(id_paciente)
+    FOREIGN KEY (id_paciente) REFERENCES tb_paciente(id_paciente)
 );
 
 SELECT * FROM tb_historico_paciente;
@@ -50,15 +50,15 @@ CREATE TABLE IF NOT EXISTS tb_atendimento(
     
 	status ENUM('Aberto', 'Concluído', 'Cancelado') DEFAULT 'Aberto',
     CONSTRAINT fk_paciente_atendimento 
-		FOREIGN KEY (id_paciente) REFERENCES tb_pacientes(id_paciente),
+		FOREIGN KEY (id_paciente) REFERENCES tb_paciente(id_paciente),
     CONSTRAINT fk_medico_atendimento
-		FOREIGN KEY (id_medico) REFERENCES tb_medicos(id_medico),
+		FOREIGN KEY (id_medico) REFERENCES tb_medico(id_medico),
     CONSTRAINT fk_enfermeiro_atendimento
-        FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiros(id_enfermeiro)
+        FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiro(id_enfermeiro)
     
 );
 
-CREATE TABLE IF NOT EXISTS tb_medicos(
+CREATE TABLE IF NOT EXISTS tb_medico(
 	id_medico INT AUTO_INCREMENT PRIMARY KEY,
     crm VARCHAR (16) NOT NULL UNIQUE,
     nome_medico VARCHAR(255) NOT NULL,
@@ -87,17 +87,17 @@ CREATE TABLE IF NOT EXISTS tb_setor(
 		FOREIGN KEY (id_hospital) REFERENCES tb_hospital (id_hospital),
 	
     CONSTRAINT fk_medico_setor
-		FOREIGN KEY (id_medico) REFERENCES tb_medicos (id_medico),
+		FOREIGN KEY (id_medico) REFERENCES tb_medico (id_medico),
 	
     CONSTRAINT fk_enfermeiro_setor
-		FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiros (id_enfermeiro),
+		FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiro (id_enfermeiro),
     
     CONSTRAINT fk_paciente_setor
-		FOREIGN KEY (id_paciente) REFERENCES tb_pacientes (id_paciente)
+		FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente)
     
 );
 
-CREATE TABLE IF NOT EXISTS tb_turnos (
+CREATE TABLE IF NOT EXISTS tb_turno (
     id_turno INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(50) NOT NULL,
     hora_inicio TIME NOT NULL,
@@ -107,13 +107,13 @@ CREATE TABLE IF NOT EXISTS tb_turnos (
     id_enfermeiro INT NOT NULL,
     
     CONSTRAINT fk_medico_turno
-        FOREIGN KEY (id_medico) REFERENCES tb_medicos(id_medico),
+        FOREIGN KEY (id_medico) REFERENCES tb_medico(id_medico),
     CONSTRAINT fk_enfermeiro_turno
-        FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiros(id_enfermeiro)
+        FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiro(id_enfermeiro)
 );
 
 
-CREATE TABLE IF NOT EXISTS tb_leitos (
+CREATE TABLE IF NOT EXISTS tb_leito (
     id_leito INT AUTO_INCREMENT PRIMARY KEY,
     numero VARCHAR(10) NOT NULL,
     tipo VARCHAR(50) NOT NULL, 
@@ -129,8 +129,8 @@ CREATE TABLE IF NOT EXISTS tb_internacoes (
     data_entrada DATETIME NOT NULL,
     data_saida DATETIME NOT NULL,
     status ENUM('Ativo','Alta','Transferido','Óbito') DEFAULT 'Ativo',
-    CONSTRAINT fk_paciente_internacao FOREIGN KEY (id_paciente) REFERENCES tb_pacientes(id_paciente),
-    CONSTRAINT fk_leito_internacao FOREIGN KEY (id_leito) REFERENCES tb_leitos(id_leito)
+    CONSTRAINT fk_paciente_internacao FOREIGN KEY (id_paciente) REFERENCES tb_paciente(id_paciente),
+    CONSTRAINT fk_leito_internacao FOREIGN KEY (id_leito) REFERENCES tb_leito(id_leito)
 );
 
 
@@ -160,11 +160,10 @@ CREATE TABLE IF NOT EXISTS tb_administrador(
     email_adm VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE tb_pacientes ADD COLUMN telefone_paciente VARCHAR(50) NOT NULL;
+
 ALTER TABLE tb_setor ADD COLUMN nome_setor VARCHAR(100);
 
-SELECT * FROM tb_paciente;
-SELECT * FROM tb_pacientes WHERE id_paciente = 4;
+
 
 ALTER TABLE tb_atendimento 
 DROP FOREIGN KEY fk_paciente_atendimento;
@@ -195,9 +194,6 @@ SELECT * FROM tb_paciente;
 ALTER TABLE tb_atendimento 
 MODIFY data_atendimento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
-show tables;
-
-
 
 
 UPDATE tb_paciente
@@ -205,10 +201,6 @@ SET  telefone_paciente = '(46) 9 8655-6456'
 WHERE id_paciente = 4;
 
 SELECT * FROM tb_historico_paciente;
-EXPLAIN SELECT * FROM tb_historico_paciente;
-
-
-
 
 DELIMITER $$
 
@@ -260,16 +252,13 @@ CREATE TABLE tb_historico_paciente (
         ON DELETE CASCADE
 );
 
-
-
-
 CREATE TABLE IF NOT EXISTS tb_arquivo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
     dados LONGBLOB
 );
 
-SELECT * FROM tb_arquivo;
+
 
 
 DELIMITER $$
@@ -283,12 +272,6 @@ end $$
 DELIMITER ;
 
 select * from tb_estado;
-
-
-CREATE VIEW enfermeiros_ativos AS
-SELECT id_enfermeiro, nome_enfermeiro
-FROM tb_enfermeiro
-WHERE status LIKE 'Ativo';
 
 INSERT INTO tb_administrador (nome_adm, email_adm) VALUES
 ('Marcos Aurélio da Silva', 'marcos.silva@admin.com'),
