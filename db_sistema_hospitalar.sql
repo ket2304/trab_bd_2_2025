@@ -15,7 +15,10 @@ CREATE TABLE IF NOT EXISTS tb_hospital(
     CONSTRAINT fk_hospital_adm FOREIGN KEY (id_adm) REFERENCES tb_administrador(id_adm)
 );
 
-CREATE TABLE IF NOT EXISTS tb_paciente(
+
+
+
+CREATE TABLE IF NOT EXISTS tb_pacientes(
 	id_paciente INT AUTO_INCREMENT PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL UNIQUE,
     nome_paciente VARCHAR(255) NOT NULL,
@@ -24,8 +27,18 @@ CREATE TABLE IF NOT EXISTS tb_paciente(
     email_paciente VARCHAR(255) NOT NULL
 ); 
 
+CREATE TABLE IF NOT EXISTS tb_historico_paciente (
+    id_historico INT AUTO_INCREMENT PRIMARY KEY,
+    id_paciente INT NOT NULL,
+    campo_alterado VARCHAR(100) NOT NULL,
+    valor_antigo VARCHAR(255),
+    valor_novo VARCHAR(255),
+    data_modificacao DATETIME NOT NULL DEFAULT NOW(),
 
+    FOREIGN KEY (id_paciente) REFERENCES tb_pacientes(id_paciente)
+);
 
+SELECT * FROM tb_historico_paciente;
 CREATE TABLE IF NOT EXISTS tb_atendimento(
 	id_atendimento INT AUTO_INCREMENT PRIMARY KEY,
 	tipo_atendimento VARCHAR(30) NOT NULL,
@@ -45,7 +58,7 @@ CREATE TABLE IF NOT EXISTS tb_atendimento(
     
 );
 
-CREATE TABLE IF NOT EXISTS tb_medico(
+CREATE TABLE IF NOT EXISTS tb_medicos(
 	id_medico INT AUTO_INCREMENT PRIMARY KEY,
     crm VARCHAR (16) NOT NULL UNIQUE,
     nome_medico VARCHAR(255) NOT NULL,
@@ -55,7 +68,6 @@ CREATE TABLE IF NOT EXISTS tb_medico(
 CREATE TABLE IF NOT EXISTS tb_enfermeiro (
     id_enfermeiro INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    cpf CHAR(11) UNIQUE NOT NULL,
     coren VARCHAR(20) UNIQUE NOT NULL,
     status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo'
 );
@@ -149,3 +161,153 @@ CREATE TABLE IF NOT EXISTS tb_administrador(
 );
 
 ALTER TABLE tb_pacientes ADD COLUMN telefone_paciente VARCHAR(50) NOT NULL;
+ALTER TABLE tb_setor ADD COLUMN nome_setor VARCHAR(100);
+
+SELECT * FROM tb_paciente;
+SELECT * FROM tb_pacientes WHERE id_paciente = 4;
+
+ALTER TABLE tb_atendimento 
+DROP FOREIGN KEY fk_paciente_atendimento;
+ALTER TABLE tb_atendimento
+ADD CONSTRAINT fk_paciente_atendimento
+FOREIGN KEY (id_paciente) REFERENCES tb_paciente(id_paciente);
+
+ALTER TABLE tb_atendimento 
+DROP FOREIGN KEY fk_medico_atendimento;
+
+ALTER TABLE tb_atendimento
+ADD CONSTRAINT fk_medico_atendimento
+FOREIGN KEY (id_medico) REFERENCES tb_medico(id_medico);
+
+ALTER TABLE tb_atendimento DROP FOREIGN KEY fk_enfermeiro_atendimento;
+
+ALTER TABLE tb_atendimento
+ADD CONSTRAINT fk_enfermeiro_atendimento
+FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiro(id_enfermeiro);
+
+
+SELECT * FROM tb_atendimento;
+SELECT * FROM tb_enfermeiro;
+SELECT * FROM tb_medico;
+SELECT * FROM tb_paciente;
+
+
+ALTER TABLE tb_atendimento 
+MODIFY data_atendimento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+show tables;
+
+
+
+
+UPDATE tb_paciente
+SET  telefone_paciente = '(46) 9 8655-6456'
+WHERE id_paciente = 4;
+
+SELECT * FROM tb_historico_paciente;
+EXPLAIN SELECT * FROM tb_historico_paciente;
+
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER tg_historico_paciente
+AFTER UPDATE ON tb_paciente
+FOR EACH ROW
+BEGIN
+    -- Nome
+    IF OLD.nome_paciente <> NEW.nome_paciente THEN
+        INSERT INTO tb_historico_paciente
+        (id_paciente, campo_alterado, valor_antigo, valor_novo, data_modificacao)
+        VALUES
+        (NEW.id_paciente, 'nome_paciente', OLD.nome_paciente, NEW.nome_paciente, NOW());
+    END IF;
+
+    -- Telefone
+    IF OLD.telefone_paciente <> NEW.telefone_paciente THEN
+        INSERT INTO tb_historico_paciente
+        (id_paciente, campo_alterado, valor_antigo, valor_novo, data_modificacao)
+        VALUES
+        (NEW.id_paciente, 'telefone_paciente', OLD.telefone_paciente, NEW.telefone_paciente, NOW());
+    END IF;
+
+    -- Email
+    IF OLD.email_paciente <> NEW.email_paciente THEN
+        INSERT INTO tb_historico_paciente
+        (id_paciente, campo_alterado, valor_antigo, valor_novo, data_modificacao)
+        VALUES
+        (NEW.id_paciente, 'email_paciente', OLD.email_paciente, NEW.email_paciente, NOW());
+    END IF;
+END$$
+
+DELIMITER ;
+
+DROP TABLE IF EXISTS tb_historico_paciente;
+
+CREATE TABLE tb_historico_paciente (
+    id_historico INT(11) NOT NULL AUTO_INCREMENT,
+    id_paciente INT(11) NOT NULL,
+    campo_alterado VARCHAR(100) NOT NULL,
+    valor_antigo VARCHAR(255),
+    valor_novo VARCHAR(255),
+    data_modificacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    PRIMARY KEY (id_historico),
+    KEY fk_paciente_idx (id_paciente),
+    CONSTRAINT fk_paciente FOREIGN KEY (id_paciente)
+        REFERENCES tb_paciente(id_paciente)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE IF NOT EXISTS tb_arquivo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    dados LONGBLOB
+);
+
+SELECT * FROM tb_arquivo;
+
+
+DELIMITER $$
+CREATE PROCEDURE insere_enfermeiro(p_nome VARCHAR(255), p_coren VARCHAR(20), p_status ENUM('Ativo', 'Inativo'))
+begin
+	insert into tb_enfermeiro(nome_enfermeiro, coren, status)
+	values(p_nome, p_coren, p_status);
+end $$
+
+	
+DELIMITER ;
+
+select * from tb_estado;
+
+
+CREATE VIEW enfermeiros_ativos AS
+SELECT id_enfermeiro, nome_enfermeiro
+FROM tb_enfermeiro
+WHERE status LIKE 'Ativo';
+
+INSERT INTO tb_administrador (nome_adm, email_adm) VALUES
+('Marcos Aurélio da Silva', 'marcos.silva@admin.com'),
+('Patrícia Oliveira Santos', 'patricia.santos@admin.com'),
+('Ricardo Menezes Almeida', 'ricardo.almeida@admin.com'),
+('Fernanda Costa Ribeiro', 'fernanda.ribeiro@admin.com'),
+('Gustavo Henrique Pereira', 'gustavo.pereira@admin.com');
+
+INSERT INTO tb_hospital (cnpj, nome, telefone, email, endereco, id_adm) VALUES
+('12.345.678/0001-90', 'Hospital Santa Maria', '(31) 3222-1188', 'contato@santamaria.com', 'Av. Afonso Pena, 1200 - Centro, Belo Horizonte - MG', 1),
+
+('23.456.789/0001-01', 'Hospital Vida e Saúde', '(11) 3899-2200', 'atendimento@vidaesaude.com', 'Rua Augusta, 900 - Consolação, São Paulo - SP', 2),
+
+('34.567.890/0001-12', 'Hospital São Lucas', '(21) 2444-3300', 'suporte@saolucas.com', 'Av. Atlântica, 4500 - Copacabana, Rio de Janeiro - RJ', 3),
+
+('45.678.901/0001-23', 'Hospital Esperança', '(41) 3377-4411', 'contato@esperanca.com', 'Rua XV de Novembro, 210 - Centro, Curitiba - PR', 4),
+
+('56.789.012/0001-34', 'Hospital Nossa Senhora da Paz', '(71) 3555-5522', 'faleconosco@pazhospital.com', 'Av. Sete de Setembro, 800 - Salvador - BA', 5);
+
+
+select * from tb_hospital;
+
