@@ -161,30 +161,6 @@ CREATE TABLE IF NOT EXISTS tb_administrador(
 );
 
 
-ALTER TABLE tb_setor ADD COLUMN nome_setor VARCHAR(100);
-
-
-
-ALTER TABLE tb_atendimento 
-DROP FOREIGN KEY fk_paciente_atendimento;
-ALTER TABLE tb_atendimento
-ADD CONSTRAINT fk_paciente_atendimento
-FOREIGN KEY (id_paciente) REFERENCES tb_paciente(id_paciente);
-
-ALTER TABLE tb_atendimento 
-DROP FOREIGN KEY fk_medico_atendimento;
-
-ALTER TABLE tb_atendimento
-ADD CONSTRAINT fk_medico_atendimento
-FOREIGN KEY (id_medico) REFERENCES tb_medico(id_medico);
-
-ALTER TABLE tb_atendimento DROP FOREIGN KEY fk_enfermeiro_atendimento;
-
-ALTER TABLE tb_atendimento
-ADD CONSTRAINT fk_enfermeiro_atendimento
-FOREIGN KEY (id_enfermeiro) REFERENCES tb_enfermeiro(id_enfermeiro);
-
-
 SELECT * FROM tb_atendimento;
 SELECT * FROM tb_enfermeiro;
 SELECT * FROM tb_medico;
@@ -194,13 +170,6 @@ SELECT * FROM tb_paciente;
 ALTER TABLE tb_atendimento 
 MODIFY data_atendimento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
-
-
-UPDATE tb_paciente
-SET  telefone_paciente = '(46) 9 8655-6456'
-WHERE id_paciente = 4;
-
-SELECT * FROM tb_historico_paciente;
 
 DELIMITER $$
 
@@ -235,7 +204,7 @@ END$$
 
 DELIMITER ;
 
-DROP TABLE IF EXISTS tb_historico_paciente;
+
 
 CREATE TABLE tb_historico_paciente (
     id_historico INT(11) NOT NULL AUTO_INCREMENT,
@@ -271,8 +240,6 @@ end $$
 	
 DELIMITER ;
 
-select * from tb_estado;
-
 INSERT INTO tb_administrador (nome_adm, email_adm) VALUES
 ('Marcos Aurélio da Silva', 'marcos.silva@admin.com'),
 ('Patrícia Oliveira Santos', 'patricia.santos@admin.com'),
@@ -292,5 +259,4 @@ INSERT INTO tb_hospital (cnpj, nome, telefone, email, endereco, id_adm) VALUES
 ('56.789.012/0001-34', 'Hospital Nossa Senhora da Paz', '(71) 3555-5522', 'faleconosco@pazhospital.com', 'Av. Sete de Setembro, 800 - Salvador - BA', 5);
 
 
-select * from tb_hospital;
 
